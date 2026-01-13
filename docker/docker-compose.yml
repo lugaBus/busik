@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lugabus-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-lugabus}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - lugabus-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: lugabus-backend
+    env_file:
+      - ./env/backend.env
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - lugabus-network
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+    command: npm run start:dev
+
+  frontend-web:
+    build:
+      context: ../frontend-web
+      dockerfile: Dockerfile
+    container_name: lugabus-frontend-web
+    env_file:
+      - ./env/frontend.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - lugabus-network
+    volumes:
+      - ../frontend-web:/app
+      - /app/node_modules
+      - /app/.next
+
+  admin-web:
+    build:
+      context: ../admin-web
+      dockerfile: Dockerfile
+    container_name: lugabus-admin-web
+    env_file:
+      - ./env/admin.env
+    ports:
+      - "3002:3002"
+    depends_on:
+      - backend
+    networks:
+      - lugabus-network
+    volumes:
+      - ../admin-web:/app
+      - /app/node_modules
+      - /app/.next
+
+  nginx:
+    image: nginx:alpine
+    container_name: lugabus-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend-web
+      - admin-web
+    networks:
+      - lugabus-network
+
+volumes:
+  postgres_data:
+
+networks:
+  lugabus-network:
+    driver: bridge
