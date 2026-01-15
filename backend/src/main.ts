@@ -54,15 +54,10 @@ async function bootstrap() {
   
   app.enableCors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, Postman, or curl requests)
-      // But only in development mode for security
+      // Allow requests with no origin (like server-to-server, nginx proxy, or curl requests)
+      // This is safe because nginx is in front and handles external requests
       if (!origin) {
-        if (isDevelopment) {
-          return callback(null, true);
-        } else {
-          // In production, reject requests without origin for security
-          return callback(new Error('CORS: Origin header is required'), false);
-        }
+        return callback(null, true);
       }
       
       // Check if origin is in allowed list
