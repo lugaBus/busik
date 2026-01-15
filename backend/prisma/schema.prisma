@@ -1,0 +1,431 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password      String
+  firstName     String?
+  lastName      String?
+  isActive      Boolean  @default(true)
+  blockReason   String? // Reason for blocking/deactivating the user
+  deleteReason  String? // Reason for deleting the user (stored before deletion)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // RBAC relations
+  userRoles UserRole[]
+
+  // Content Creator relations
+  createdContentCreators   ContentCreator[]              @relation("CreatedBy")
+  publishedContentCreators ContentCreator[]              @relation("PublishedBy")
+  statusHistoryChanges     ContentCreatorStatusHistory[] @relation("StatusChangedBy")
+
+  // Proof submissions
+  proofSubmissions ProofSubmission[]
+
+  // Proof submission reviews
+  proofSubmissionReviews ProofSubmissionStatus[]
+
+  // Content creator submissions
+  contentCreatorSubmissions ContentCreatorSubmission[]
+
+  // Content creator submission reviews
+  contentCreatorSubmissionReviews ContentCreatorSubmissionStatus[]
+
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  resource    String // e.g., 'users', 'content', 'audit'
+  action      String // e.g., 'create', 'read', 'update', 'delete'
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+// Many-to-Many: User <-> Role
+model UserRole {
+  id        String   @id @default(uuid())
+  userId    String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@map("user_roles")
+}
+
+// Many-to-Many: Role <-> Permission
+model RolePermission {
+  id           String   @id @default(uuid())
+  roleId       String
+  permissionId String
+  createdAt    DateTime @default(now())
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        Json // { en: "Category", ua: "Категорія", ru: "Категория" }
+  slug        String   @unique
+  description Json? // { en: "Description", ua: "Опис", ru: "Описание" }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  contentCreators ContentCreatorCategory[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id          String   @id @default(uuid())
+  name        Json // { en: "Tag", ua: "Тег", ru: "Тег" }
+  slug        String   @unique
+  description Json? // { en: "Description", ua: "Опис", ru: "Описание" }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  contentCreators ContentCreatorTag[]
+
+  @@map("tags")
+}
+
+model Platform {
+  id          String   @id @default(uuid())
+  name        Json // { en: "Platform", ua: "Платформа", ru: "Платформа" }
+  slug        String   @unique
+  description Json? // { en: "Description", ua: "Опис", ru: "Описание" }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  contentCreators ContentCreatorPlatform[]
+
+  @@map("platforms")
+}
+
+model ContentCreator {
+  id          String  @id @default(uuid())
+  name        Json // { en: "Name", ua: "Ім'я", ru: "Имя" }
+  quote       Json? // { en: "Quote", ua: "Цитата", ru: "Цитата" }
+  description Json? // { en: "Description", ua: "Опис", ru: "Описание" }
+  locale      String  @default("uk-UA")
+  mainLink    String? // Основной линк/URL
+  photoUrls   Json? // Массив URL фото контент-мейкера (до 4 фото) ["/path/to/photo1.jpg", "/path/to/photo2.jpg"]
+  position    Int     @default(0) // Позиция для сортировки
+  rating      Int? // Рейтинг
+
+  // Arrays stored as JSON
+  contentFormats String[] @default([])
+  tone           Int      @default(0) // Tone from -10 to +10
+
+  // JSON fields for nested objects
+  audience  Json? // { age: [18, 35], geo: ["UA", "PL"], level: ["beginner"] }
+  metrics   Json? // { engagementRate: 4.2, postingFrequency: "daily" }
+  piterTest String? // True, False, Unknown
+
+  status String @default("active") // active, inactive, pending, user_added
+
+  // User relations
+  createdById String? // Кто добавил (может быть и юзер с фронта, и админ)
+  createdBy   User?   @relation("CreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  publishedById String? // Кто опубликовал (кто из админов перевел из статуса user_added в любой другой)
+  publishedBy   User?   @relation("PublishedBy", fields: [publishedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  categories       ContentCreatorCategory[]
+  tags             ContentCreatorTag[]
+  ratio            ContentCreatorRatio?
+  platforms        ContentCreatorPlatform[]
+  piterTestProofs  PiterTestProof[]
+  proofs           Proof[]
+  proofSubmissions ProofSubmission[]
+  statusHistory    ContentCreatorStatusHistory[]
+
+  @@map("content_creators")
+}
+
+// Many-to-Many: ContentCreator <-> Category
+model ContentCreatorCategory {
+  id               String   @id @default(uuid())
+  contentCreatorId String
+  categoryId       String
+  createdAt        DateTime @default(now())
+
+  contentCreator ContentCreator @relation(fields: [contentCreatorId], references: [id], onDelete: Cascade)
+  category       Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([contentCreatorId, categoryId])
+  @@map("content_creator_categories")
+}
+
+// Many-to-Many: ContentCreator <-> Tag
+model ContentCreatorTag {
+  id               String   @id @default(uuid())
+  contentCreatorId String
+  tagId            String
+  createdAt        DateTime @default(now())
+
+  contentCreator ContentCreator @relation(fields: [contentCreatorId], references: [id], onDelete: Cascade)
+  tag            Tag            @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([contentCreatorId, tagId])
+  @@map("content_creator_tags")
+}
+
+model Ratio {
+  id          String   @id @default(uuid())
+  name        Json // { en: "Ratio", ua: "Рейтинг", ru: "Рейтинг" }
+  slug        String   @unique
+  description Json? // { en: "Description", ua: "Опис", ru: "Описание" }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  contentCreators ContentCreatorRatio[]
+
+  @@map("ratios")
+}
+
+// One-to-Many: ContentCreator -> Ratio (only one ratio per creator)
+model ContentCreatorRatio {
+  id               String   @id @default(uuid())
+  contentCreatorId String   @unique
+  ratioId          String
+  createdAt        DateTime @default(now())
+
+  contentCreator ContentCreator @relation(fields: [contentCreatorId], references: [id], onDelete: Cascade)
+  ratio          Ratio          @relation(fields: [ratioId], references: [id], onDelete: Cascade)
+
+  @@map("content_creator_ratios")
+}
+
+// Many-to-Many: ContentCreator <-> Platform (with url and description)
+model ContentCreatorPlatform {
+  id               String   @id @default(uuid())
+  contentCreatorId String
+  platformId       String
+  url              String // URL платформы (обязательное поле)
+  description      Json? // { en: "Description", ua: "Опис", ru: "Описание" } (опциональное)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  contentCreator ContentCreator @relation(fields: [contentCreatorId], references: [id], onDelete: Cascade)
+  platform       Platform       @relation(fields: [platformId], references: [id], onDelete: Cascade)
+
+  @@unique([contentCreatorId, platformId, url]) // Уникальная комбинация: один creator может иметь несколько одинаковых платформ с разными URL
+  @@map("content_creator_platforms")
+}
+
+// Piter Test Proofs для ContentCreator
+model PiterTestProof {
+  id               String   @id @default(uuid())
+  contentCreatorId String
+  url              String?
+  imageUrl         String?
+  description      Json? // { en: "Description", ua: "Опис", ru: "Описание" } (опциональное)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  contentCreator ContentCreator @relation(fields: [contentCreatorId], references: [id], onDelete: Cascade)
+
+  @@map("piter_test_proofs")
+}
+
+model Proof {
+  id               String   @id @default(uuid())
+  contentCreatorId String
+  url              String?
+  imageUrl         String?
+  description      Json? // { en: "Description", ua: "Опис", ru: "Описание" }
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  contentCreator ContentCreator @relation(fields: [contentCreatorId], references: [id], onDelete: Cascade)
+
+  @@map("proofs")
+}
+
+// History of status changes for ContentCreator
+model ContentCreatorStatusHistory {
+  id               String   @id @default(uuid())
+  contentCreatorId String
+  previousStatus   String? // Previous status (null for initial creation)
+  newStatus        String // New status
+  changedById      String? // User who changed the status (null for anonymous)
+  changedBy        User?    @relation("StatusChangedBy", fields: [changedById], references: [id], onDelete: SetNull)
+  createdAt        DateTime @default(now())
+
+  contentCreator ContentCreator @relation(fields: [contentCreatorId], references: [id], onDelete: Cascade)
+
+  @@index([contentCreatorId])
+  @@map("content_creator_status_history")
+}
+
+// Anonymous session for tracking anonymous users
+model AnonymousSession {
+  id          String   @id @default(uuid())
+  submitterId String   @unique // Opaque ID that client stores
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  proofSubmissions          ProofSubmission[]
+  contentCreatorSubmissions ContentCreatorSubmission[]
+
+  @@map("anonymous_sessions")
+}
+
+// User-submitted proofs (can be from authenticated user or anonymous)
+model ProofSubmission {
+  id                         String  @id @default(uuid())
+  contentCreatorId           String? // Optional: can be null if attached to submission
+  contentCreatorSubmissionId String? // Optional: for proofs attached to submissions
+  url                        String?
+  imageUrl                   String?
+  description                Json? // { en: "Description", ua: "Опис", ru: "Описание" }
+
+  // Submitter identification: either userId (if authenticated) or anonymousSessionId (if anonymous)
+  userId             String? // Authenticated user ID
+  anonymousSessionId String? // Anonymous session ID
+
+  user             User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  anonymousSession AnonymousSession? @relation(fields: [anonymousSessionId], references: [id], onDelete: Cascade)
+
+  contentCreator           ContentCreator?           @relation(fields: [contentCreatorId], references: [id], onDelete: Cascade)
+  contentCreatorSubmission ContentCreatorSubmission? @relation(fields: [contentCreatorSubmissionId], references: [id], onDelete: Cascade)
+
+  // Status tracking
+  statusHistory ProofSubmissionStatus[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([contentCreatorId])
+  @@index([contentCreatorSubmissionId])
+  @@index([userId])
+  @@index([anonymousSessionId])
+  @@map("proof_submissions")
+}
+
+// Status history for proof submissions (read-only for users)
+model ProofSubmissionStatus {
+  id                String   @id @default(uuid())
+  proofSubmissionId String
+  status            String // 'submitted', 'in_review', 'accepted', 'declined', 'deleted_by_user'
+  reviewedById      String? // Admin who reviewed (null for system)
+  reviewedBy        User?    @relation(fields: [reviewedById], references: [id], onDelete: SetNull)
+  comment           String? // Optional comment from reviewer
+  createdAt         DateTime @default(now())
+
+  proofSubmission ProofSubmission @relation(fields: [proofSubmissionId], references: [id], onDelete: Cascade)
+
+  @@index([proofSubmissionId])
+  @@index([status])
+  @@map("proof_submission_status")
+}
+
+// User-submitted content creators (can be from authenticated user or anonymous)
+model ContentCreatorSubmission {
+  id          String  @id @default(uuid())
+  name        Json // { en: "Name", ua: "Ім'я", ru: "Имя" }
+  quote       Json? // { en: "Quote", ua: "Цитата", ru: "Цитата" }
+  description Json? // { en: "Description", ua: "Опис", ru: "Описание" }
+  locale      String  @default("uk-UA")
+  mainLink    String? // Основной линк/URL
+  photoUrls   Json? // Массив URL фото контент-мейкера (до 4 фото) ["/path/to/photo1.jpg", "/path/to/photo2.jpg"]
+  rating      Int? // Рейтинг
+
+  // Arrays stored as JSON
+  contentFormats String[] @default([])
+  tone           Int      @default(0) // Tone from -10 to +10
+
+  // JSON fields for nested objects
+  audience  Json? // { age: [18, 35], geo: ["UA", "PL"], level: ["beginner"] }
+  metrics   Json? // { engagementRate: 4.2, postingFrequency: "daily" }
+  piterTest String? // True, False, Unknown
+
+  // Relations to categories, tags, ratios (stored as JSON arrays of IDs)
+  categoryIds String[] @default([])
+  tagIds      String[] @default([])
+  ratioIds    String[] @default([])
+
+  // Platform relations (stored as JSON array)
+  platforms Json? // Array of { platformId: string, url: string, description?: Json }
+
+  // Submitter identification: either userId (if authenticated) or anonymousSessionId (if anonymous)
+  userId             String? // Authenticated user ID
+  anonymousSessionId String? // Anonymous session ID
+
+  user             User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  anonymousSession AnonymousSession? @relation(fields: [anonymousSessionId], references: [id], onDelete: Cascade)
+
+  // Status tracking
+  statusHistory ContentCreatorSubmissionStatus[]
+
+  // Proofs attached to this submission
+  proofSubmissions ProofSubmission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([anonymousSessionId])
+  @@map("content_creator_submissions")
+}
+
+// Status history for content creator submissions (read-only for users)
+model ContentCreatorSubmissionStatus {
+  id                         String   @id @default(uuid())
+  contentCreatorSubmissionId String
+  status                     String // 'submitted', 'in_review', 'accepted', 'declined', 'deleted_by_user'
+  reviewedById               String? // Admin who reviewed (null for system)
+  reviewedBy                 User?    @relation(fields: [reviewedById], references: [id], onDelete: SetNull)
+  comment                    String? // Optional comment from reviewer
+  createdAt                  DateTime @default(now())
+
+  contentCreatorSubmission ContentCreatorSubmission @relation(fields: [contentCreatorSubmissionId], references: [id], onDelete: Cascade)
+
+  @@index([contentCreatorSubmissionId])
+  @@index([status])
+  @@map("content_creator_submission_status")
+}
