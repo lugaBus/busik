@@ -16,6 +16,9 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
+# Install OpenSSL 1.1 for Prisma
+RUN apk add --no-cache openssl1.1-compat
+
 ENV NODE_ENV=production
 
 COPY --from=builder /app/node_modules ./node_modules
