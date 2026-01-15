@@ -16,8 +16,9 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Install OpenSSL for Prisma
-RUN apk add --no-cache openssl libc6-compat
+# Install OpenSSL 1.1 for Prisma (from edge repository)
+RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main openssl1.1-compat || \
+    apk add --no-cache openssl libc6-compat
 
 ENV NODE_ENV=production
 
