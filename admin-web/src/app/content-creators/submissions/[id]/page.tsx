@@ -621,7 +621,9 @@ export default function SubmissionDetailPage() {
                     setFormData({
                       ...formData,
                       quote: {
-                        ...(formData.quote || submission.quote || {}),
+                        en: (formData.quote || submission.quote || {}).en || '',
+                        ua: (formData.quote || submission.quote || {}).ua || '',
+                        ru: (formData.quote || submission.quote || {}).ru || '',
                         [editLanguage]: e.target.value,
                       },
                     });
@@ -661,7 +663,9 @@ export default function SubmissionDetailPage() {
                     setFormData({
                       ...formData,
                       description: {
-                        ...(formData.description || submission.description || {}),
+                        en: (formData.description || submission.description || {}).en || '',
+                        ua: (formData.description || submission.description || {}).ua || '',
+                        ru: (formData.description || submission.description || {}).ru || '',
                         [editLanguage]: e.target.value,
                       },
                     });
@@ -1165,7 +1169,9 @@ export default function SubmissionDetailPage() {
                                     [proof.id]: {
                                       ...formData,
                                       description: {
-                                        ...(formData.description || proof.description || {}),
+                                        en: (formData.description || proof.description || {}).en || '',
+                                        ua: (formData.description || proof.description || {}).ua || '',
+                                        ru: (formData.description || proof.description || {}).ru || '',
                                         [editLanguage]: e.target.value,
                                       },
                                     },

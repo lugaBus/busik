@@ -260,7 +260,7 @@ export default function CreatorDetailPage() {
   const hasContent = (text: any): boolean => {
     if (!text) return false;
     const textValue = typeof text === 'string' ? text : getI18nText(text, language);
-    return textValue && textValue.trim().length > 0;
+    return Boolean(textValue && textValue.trim().length > 0);
   };
 
   // Helper function to get score badge class based on rating

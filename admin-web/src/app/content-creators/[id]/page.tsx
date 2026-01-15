@@ -3090,7 +3090,7 @@ export default function ContentCreatorFormPage() {
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {proofSubmissions.map((submission) => {
-                    const statusDisplay = submission.currentStatus || 'submitted';
+                    const statusDisplay: 'submitted' | 'in_review' | 'accepted' | 'declined' = submission.currentStatus || 'submitted';
                     const submitterInfo = submission.user
                       ? `${submission.user.firstName || ''} ${submission.user.lastName || ''} (${submission.user.email})`
                       : submission.anonymousSession
@@ -3146,9 +3146,7 @@ export default function ContentCreatorFormPage() {
                                         ? 'rgba(239, 68, 68, 0.125)'
                                         : statusDisplay === 'in_review'
                                           ? 'rgba(251, 146, 60, 0.125)'
-                                          : statusDisplay === 'deleted_by_user'
-                                            ? 'rgba(107, 114, 128, 0.125)'
-                                            : 'rgba(99, 102, 241, 0.125)',
+                                          : 'rgba(99, 102, 241, 0.125)',
                                   color:
                                     statusDisplay === 'accepted'
                                       ? '#10b981'
@@ -3156,9 +3154,7 @@ export default function ContentCreatorFormPage() {
                                         ? '#ef4444'
                                         : statusDisplay === 'in_review'
                                           ? '#fb923c'
-                                          : statusDisplay === 'deleted_by_user'
-                                            ? '#6b7280'
-                                            : '#6366f1',
+                                          : '#6366f1',
                                   border: `1px solid ${
                                     statusDisplay === 'accepted'
                                       ? '#10b981'
@@ -3166,9 +3162,7 @@ export default function ContentCreatorFormPage() {
                                         ? '#ef4444'
                                         : statusDisplay === 'in_review'
                                           ? '#fb923c'
-                                          : statusDisplay === 'deleted_by_user'
-                                            ? '#6b7280'
-                                            : '#6366f1'
+                                          : '#6366f1'
                                   }`,
                                 }}
                               >
@@ -3178,9 +3172,7 @@ export default function ContentCreatorFormPage() {
                                     ? '✗ Declined' 
                                     : statusDisplay === 'in_review'
                                       ? '⏳ In Review'
-                                      : statusDisplay === 'deleted_by_user'
-                                        ? '🗑️ Deleted by User'
-                                        : '📤 Submitted'}
+                                      : '📤 Submitted'}
                               </span>
                             </div>
                             {submission.url && (

@@ -921,7 +921,7 @@ export default function NewCreatorSubmissionPage() {
                           <button
                             type="button"
                             onClick={() => handleDeleteProof(proof.id, proof.currentStatus)}
-                            disabled={proof.currentStatus && proof.currentStatus !== 'submitted'}
+                            disabled={Boolean(proof.currentStatus && proof.currentStatus !== 'submitted')}
                             style={{
                               padding: '0.5rem 1rem',
                               background: proof.currentStatus && proof.currentStatus !== 'submitted' ? 'var(--text-muted)' : 'var(--error)',
