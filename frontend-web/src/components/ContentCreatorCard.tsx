@@ -2,6 +2,7 @@
 
 import { ContentCreator } from '@/api/contentCreators';
 import { getI18nText, Language } from '@/utils/i18n';
+import { buildResourceUrl } from '@/utils/url';
 import Link from 'next/link';
 
 interface ContentCreatorCardProps {
@@ -10,12 +11,11 @@ interface ContentCreatorCardProps {
 }
 
 export default function ContentCreatorCard({ creator, language }: ContentCreatorCardProps) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001';
   // Use first photo from photoUrls array, or fallback to photoUrl for backward compatibility
   const firstPhotoUrl = creator.photoUrls && creator.photoUrls.length > 0 
     ? creator.photoUrls[0] 
     : creator.photoUrl;
-  const photoUrl = firstPhotoUrl ? `${apiUrl}${firstPhotoUrl}` : null;
+  const photoUrl = buildResourceUrl(firstPhotoUrl);
   const name = getI18nText(creator.name, language);
 
   // Helper function to check if text is not empty and not just whitespace

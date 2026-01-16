@@ -241,16 +241,15 @@ export default function CreatorDetailPage() {
     );
   }
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001';
   // Use first photo from photoUrls array, or fallback to photoUrl for backward compatibility
   const firstPhotoUrl = creator.photoUrls && creator.photoUrls.length > 0 
     ? creator.photoUrls[0] 
     : creator.photoUrl;
-  const photoUrl = firstPhotoUrl ? `${apiUrl}${firstPhotoUrl}` : null;
+  const photoUrl = buildResourceUrl(firstPhotoUrl);
   // Get all photo URLs
   const allPhotoUrls = creator.photoUrls && creator.photoUrls.length > 0
-    ? creator.photoUrls.map(url => `${apiUrl}${url}`)
-    : (creator.photoUrl ? [`${apiUrl}${creator.photoUrl}`] : []);
+    ? creator.photoUrls.map(url => buildResourceUrl(url) || url)
+    : (creator.photoUrl ? [buildResourceUrl(creator.photoUrl) || creator.photoUrl] : []);
   const name = getI18nText(creator.name, language);
   const profession = creator.categories && creator.categories.length > 0 
     ? getI18nText(creator.categories[0].name, language) 
@@ -558,9 +557,7 @@ export default function CreatorDetailPage() {
               <div className="section-content">
                 <div className="proofs-list">
                   {creator.proofs.map((proof) => {
-                    const proofImageUrl = proof.imageUrl 
-                      ? (proof.imageUrl.startsWith('http') ? proof.imageUrl : `${apiUrl}${proof.imageUrl}`)
-                      : null;
+                    const proofImageUrl = buildResourceUrl(proof.imageUrl);
                     const proofDescription = proof.description ? getI18nText(proof.description, language) : null;
                     return (
                       <div key={proof.id} className="proof-item">
@@ -743,9 +740,7 @@ export default function CreatorDetailPage() {
               <div className="section-content" style={{ marginTop: '1rem' }}>
                 <div className="proofs-list">
                   {userProofs.map((proof) => {
-                    const proofImageUrl = proof.imageUrl 
-                      ? (proof.imageUrl.startsWith('http') ? proof.imageUrl : `${apiUrl}${proof.imageUrl}`)
-                      : null;
+                    const proofImageUrl = buildResourceUrl(proof.imageUrl);
                     const proofDescription = proof.description ? getI18nText(proof.description, language) : null;
                     const statusDisplay = getStatusDisplay(proof.currentStatus);
                     const canDelete = proof.currentStatus !== 'in_review';

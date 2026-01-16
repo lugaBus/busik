@@ -142,7 +142,7 @@ export const proofSubmissionsApi = {
       {
         headers: {
           'x-submitter-id': submitterId,
-          'Content-Type': 'multipart/form-data',
+          // Don't set Content-Type - let browser set it with boundary
         },
       }
     );

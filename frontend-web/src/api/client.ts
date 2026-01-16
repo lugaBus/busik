@@ -11,6 +11,11 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
+      // Remove Content-Type header for FormData - browser will set it with boundary
+      if (config.data instanceof FormData) {
+        delete config.headers['Content-Type'];
+      }
+      
       // Add token for all endpoints if user is authenticated
       // Public endpoints support optional JWT authentication
       const token = localStorage.getItem('token');

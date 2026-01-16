@@ -182,7 +182,7 @@ async function main() {
     { name: { en: 'Music', ua: 'Музика', ru: 'Музыка' }, slug: 'music' },
   ];
 
-  const createdCategories = [];
+  const createdCategories: Array<{ id: string; slug: string }> = [];
   for (const cat of categories) {
     const existing = await prisma.category.findUnique({
       where: { slug: cat.slug },
@@ -218,7 +218,7 @@ async function main() {
     { name: { en: 'Traitor', ua: 'Зрадник', ru: 'Предатель' }, slug: 'traitor' },
   ];
 
-  const createdRatios = [];
+  const createdRatios: Array<{ id: string; slug: string }> = [];
   for (const ratio of ratios) {
     const existing = await prisma.ratio.findUnique({
       where: { slug: ratio.slug },

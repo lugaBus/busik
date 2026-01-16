@@ -6,6 +6,7 @@ import { contentCreatorSubmissionsApi, CreateContentCreatorSubmissionDto } from 
 import { contentCreatorsApi } from '@/api/contentCreators';
 import { proofSubmissionsApi, CreateProofSubmissionDto, ProofSubmission } from '@/api/proofSubmissions';
 import { getI18nText, getBrowserLanguage, Language, createI18nText } from '@/utils/i18n';
+import { buildResourceUrl } from '@/utils/url';
 import { authService } from '@/auth/auth.service';
 import ThemeToggle from '@/components/ThemeToggle';
 import Link from 'next/link';
@@ -581,7 +582,7 @@ export default function NewCreatorSubmissionPage() {
               {photoUrls.map((photoUrl, index) => (
                 <div key={index} style={{ position: 'relative', display: 'inline-block' }}>
                   <img
-                    src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001'}${photoUrl}`}
+                    src={buildResourceUrl(photoUrl) || ''}
                     alt={`Photo ${index + 1}`}
                     style={{
                       width: '150px',
@@ -859,10 +860,7 @@ export default function NewCreatorSubmissionPage() {
             ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1rem' }}>
                   {proofs.map((proof) => {
-                    const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001';
-                    const proofImageUrl = proof.imageUrl 
-                      ? (proof.imageUrl.startsWith('http') ? proof.imageUrl : `${apiUrl}${proof.imageUrl}`)
-                      : null;
+                    const proofImageUrl = buildResourceUrl(proof.imageUrl);
                     const proofDescription = proof.description ? getI18nText(proof.description, language) : null;
                     return (
                       <div
