@@ -1457,16 +1457,7 @@ export default function ContentCreatorFormPage() {
               onChange={(e) => {
                 setFormData({ ...formData, ratioId: e.target.value || undefined });
               }}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid var(--border)',
-                borderRadius: '0.5rem',
-                background: 'var(--bg-input)',
-                color: 'var(--text-primary)',
-                fontSize: '0.875rem',
-                cursor: 'pointer',
-              }}
+              style={{ width: '100%' }}
             >
               <option value="">Select a ratio...</option>
               {ratios.length === 0 ? (

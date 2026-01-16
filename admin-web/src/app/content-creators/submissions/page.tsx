@@ -349,15 +349,6 @@ export default function ContentCreatorSubmissionsPage() {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as Language)}
-              style={{
-                padding: '0.5rem 1rem',
-                border: '1px solid var(--border)',
-                borderRadius: '0.5rem',
-                background: 'var(--bg-input)',
-                color: 'var(--text-primary)',
-                fontSize: '0.875rem',
-                cursor: 'pointer',
-              }}
             >
               <option value="en">English</option>
               <option value="ua">Українська</option>
@@ -419,15 +410,6 @@ export default function ContentCreatorSubmissionsPage() {
             setStatusFilter(e.target.value);
             setPage(1);
           }}
-          style={{
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            background: 'var(--bg-input)',
-            color: 'var(--text-primary)',
-            fontSize: '0.875rem',
-            cursor: 'pointer',
-          }}
         >
           <option value="">All Status</option>
           <option value="submitted">Submitted</option>
@@ -442,15 +424,6 @@ export default function ContentCreatorSubmissionsPage() {
             setCategoryFilter(e.target.value);
             setPage(1);
           }}
-          style={{
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            background: 'var(--bg-input)',
-            color: 'var(--text-primary)',
-            fontSize: '0.875rem',
-            cursor: 'pointer',
-          }}
         >
           <option value="">All Categories</option>
           {categories.map((category) => (
@@ -464,15 +437,6 @@ export default function ContentCreatorSubmissionsPage() {
           onChange={(e) => {
             setRatioFilter(e.target.value);
             setPage(1);
-          }}
-          style={{
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            background: 'var(--bg-input)',
-            color: 'var(--text-primary)',
-            fontSize: '0.875rem',
-            cursor: 'pointer',
           }}
         >
           <option value="">All Ratios</option>

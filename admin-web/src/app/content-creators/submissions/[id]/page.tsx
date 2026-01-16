@@ -1006,17 +1006,7 @@ export default function SubmissionDetailPage() {
                   const selected = Array.from(e.target.selectedOptions, (option) => option.value);
                   setFormData({ ...formData, ratioIds: selected });
                 }}
-                style={{
-                  width: '100%',
-                  minHeight: '120px',
-                  padding: '0.75rem',
-                  border: '1px solid var(--border)',
-                  borderRadius: '0.5rem',
-                  background: 'var(--bg-input)',
-                  color: 'var(--text-primary)',
-                  fontSize: '0.875rem',
-                  cursor: 'pointer',
-                }}
+                style={{ width: '100%' }}
               >
                 {ratios.length === 0 ? (
                   <option disabled>No ratios available</option>

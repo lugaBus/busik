@@ -613,15 +613,6 @@ export default function ContentCreatorsPage() {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as Language)}
-              style={{
-                padding: '0.5rem 1rem',
-                border: '1px solid var(--border)',
-                borderRadius: '0.5rem',
-                background: 'var(--bg-input)',
-                color: 'var(--text-primary)',
-                fontSize: '0.875rem',
-                cursor: 'pointer',
-              }}
             >
               <option value="en">English</option>
               <option value="ua">Українська</option>
@@ -728,15 +719,6 @@ export default function ContentCreatorsPage() {
             setStatusFilter(e.target.value);
             setPage(1);
           }}
-          style={{
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            background: 'var(--bg-input)',
-            color: 'var(--text-primary)',
-            fontSize: '0.875rem',
-            cursor: 'pointer',
-          }}
         >
           <option value="">All Status</option>
           <option value="active">Active</option>
@@ -749,15 +731,6 @@ export default function ContentCreatorsPage() {
           onChange={(e) => {
             setCategoryFilter(e.target.value);
             setPage(1);
-          }}
-          style={{
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            background: 'var(--bg-input)',
-            color: 'var(--text-primary)',
-            fontSize: '0.875rem',
-            cursor: 'pointer',
           }}
         >
           <option value="">All Categories</option>

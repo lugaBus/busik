@@ -138,15 +138,6 @@ export default function PlatformFormPage() {
                   <select
                     value={editLanguage}
                     onChange={(e) => setEditLanguage(e.target.value as Language)}
-                    style={{
-                      padding: '0.5rem 1rem',
-                      border: '1px solid var(--border)',
-                      borderRadius: '0.5rem',
-                      background: 'var(--bg-input)',
-                      color: 'var(--text-primary)',
-                      fontSize: '0.875rem',
-                      cursor: 'pointer',
-                    }}
                   >
                     <option value="en">English</option>
                     <option value="ua">Українська</option>
