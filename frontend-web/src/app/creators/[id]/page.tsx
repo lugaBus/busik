@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { contentCreatorsApi, ContentCreator } from '@/api/contentCreators';
 import { getI18nText, getBrowserLanguage, Language, createI18nText } from '@/utils/i18n';
+import { buildResourceUrl, getApiBaseUrl } from '@/utils/url';
 import { authService } from '@/auth/auth.service';
 import { proofSubmissionsApi, ProofSubmission, CreateProofSubmissionDto } from '@/api/proofSubmissions';
 import ThemeToggle from '@/components/ThemeToggle';
