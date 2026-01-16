@@ -386,6 +386,43 @@ async function main() {
     console.log(`✅ Created content creator: ${(creatorData.name as any).en}`);
   }
 
+  // Create additional 50 content creators, half of them with 'active' status
+  const additionalCreators = Array.from({ length: 50 }, (_, i) => {
+    const creator = generateCreator(20 + i);
+    // First 25 are active, rest have random status
+    const status = i < 25 ? 'active' : randomChoice(['inactive', 'pending']);
+    return { ...creator, status };
+  });
+
+  for (const creatorData of additionalCreators) {
+    const { categoryIds, ratioIds, ...creatorFields } = creatorData;
+    
+    const creator = await prisma.contentCreator.create({
+      data: {
+        ...creatorFields,
+        createdBy: { connect: { id: adminUser.id } },
+        categories: categoryIds && categoryIds.length > 0 ? {
+          create: categoryIds.map((categoryId) => ({
+            category: { connect: { id: categoryId } },
+          })),
+        } : undefined,
+        ratio: ratioIds && ratioIds.length > 0 ? {
+          create: {
+            ratio: { connect: { id: ratioIds[0] } },
+          },
+        } : undefined,
+        statusHistory: {
+          create: {
+            previousStatus: null,
+            newStatus: creatorFields.status,
+            changedById: adminUser.id,
+          },
+        },
+      },
+    });
+    console.log(`✅ Created content creator: ${(creatorData.name as any).en} (${creatorFields.status})`);
+  }
+
   // Create a content creator with user_added status (added by user from frontend)
   const userAddedCreator = await prisma.contentCreator.create({
     data: {
