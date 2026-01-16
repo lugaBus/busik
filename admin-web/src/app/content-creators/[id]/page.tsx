@@ -1160,7 +1160,7 @@ export default function ContentCreatorFormPage() {
                   {photoUrls.map((photoUrl, index) => (
                     <div key={index} style={{ position: 'relative', display: 'inline-block' }}>
                       <img
-                        src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001'}${photoUrl}`}
+                        src={buildResourceUrl(photoUrl) || ''}
                         alt={`${getI18nText(formData.name, 'ua')} - Photo ${index + 1}`}
                         style={{
                           width: '150px',

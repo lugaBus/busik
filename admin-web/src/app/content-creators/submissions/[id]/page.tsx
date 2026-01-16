@@ -835,7 +835,7 @@ export default function SubmissionDetailPage() {
             {photoUrls.map((photoUrl, index) => (
               <div key={index} style={{ position: 'relative', display: 'inline-block' }}>
                 <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001'}${photoUrl}`}
+                  src={buildResourceUrl(photoUrl) || ''}
                   alt={`Photo ${index + 1}`}
                   style={{
                     width: '150px',
@@ -1184,7 +1184,7 @@ export default function SubmissionDetailPage() {
                             {formData.imageUrl && (
                               <div style={{ marginTop: '0.5rem' }}>
                                 <img
-                                  src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001'}${formData.imageUrl}`}
+                                  src={buildResourceUrl(formData.imageUrl) || ''}
                                   alt="Proof preview"
                                   style={{
                                     maxWidth: '300px',
@@ -1219,7 +1219,7 @@ export default function SubmissionDetailPage() {
                             {proof.imageUrl && (
                               <div style={{ marginTop: '0.5rem' }}>
                                 <img
-                                  src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001'}${proof.imageUrl}`}
+                                  src={buildResourceUrl(proof.imageUrl) || ''}
                                   alt="Proof"
                                   style={{
                                     maxWidth: '300px',

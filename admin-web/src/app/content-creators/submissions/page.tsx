@@ -650,7 +650,7 @@ export default function ContentCreatorSubmissionsPage() {
                     <td style={{ padding: '1rem', textAlign: 'center' }}>
                       {photoUrl ? (
                         <img
-                          src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001'}${photoUrl}`}
+                          src={buildResourceUrl(photoUrl) || ''}
                           alt={getI18nText(submission.name, language)}
                           style={{
                             width: '50px',

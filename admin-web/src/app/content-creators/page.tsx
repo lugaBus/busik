@@ -23,6 +23,7 @@ import { contentCreatorsApi, ContentCreator, StatusHistoryItem } from '@/api/con
 import { categoriesApi, Category } from '@/api/categories';
 import { authService } from '@/auth/auth.service';
 import { getI18nText, Language } from '@/utils/i18n';
+import { buildResourceUrl } from '@/utils/url';
 
 function SortableItem({ creator, language, position, onEdit, onDelete, onViewHistory }: { creator: ContentCreator; language: Language; position?: number; onEdit: () => void; onDelete: () => void; onViewHistory: () => void }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -100,7 +101,7 @@ function SortableItem({ creator, language, position, onEdit, onDelete, onViewHis
       <td style={{ padding: '1rem' }}>
         {creator.photoUrls && creator.photoUrls.length > 0 && creator.photoUrls[0] ? (
           <img
-            src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001'}${creator.photoUrls[0]}`}
+            src={buildResourceUrl(creator.photoUrls[0]) || ''}
             alt={getI18nText(creator.name, language)}
             style={{
               width: '50px',
