@@ -12,6 +12,7 @@ import { proofsApi, Proof, CreateProofDto } from '@/api/proofs';
 import { proofSubmissionsApi, ProofSubmission, UpdateProofSubmissionStatusDto } from '@/api/proofSubmissions';
 import { authService } from '@/auth/auth.service';
 import { createI18nText, getI18nText, I18nText, Language } from '@/utils/i18n';
+import { buildResourceUrl } from '@/utils/url';
 
 export default function ContentCreatorFormPage() {
   const router = useRouter();

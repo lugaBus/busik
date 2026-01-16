@@ -8,6 +8,7 @@ import { ratiosApi, Ratio } from '@/api/ratios';
 import { I18nText } from '@/api/contentCreators';
 import { authService } from '@/auth/auth.service';
 import { getI18nText, Language } from '@/utils/i18n';
+import { buildResourceUrl } from '@/utils/url';
 
 export default function ContentCreatorSubmissionsPage() {
   const router = useRouter();

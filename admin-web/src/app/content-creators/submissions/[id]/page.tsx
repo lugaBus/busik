@@ -9,6 +9,7 @@ import { proofSubmissionsApi, ProofSubmission, UpdateProofSubmissionStatusDto, U
 import apiClient from '@/api/client';
 import { authService } from '@/auth/auth.service';
 import { getI18nText, createI18nText, Language, I18nText } from '@/utils/i18n';
+import { buildResourceUrl } from '@/utils/url';
 import { parseApiError } from '@/utils/errorHandler';
 
 export default function SubmissionDetailPage() {
