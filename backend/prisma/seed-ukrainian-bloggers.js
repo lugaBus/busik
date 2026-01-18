@@ -382,6 +382,9 @@ async function main() {
             piterTest: 'True',
             mobilizationPosition: 'support',
             bordersPosition: 'neutral',
+            proofs: [
+                { url: 'https://www.youtube.com/watch?v=example1', description: { en: 'Interview about mobilization', ua: 'Інтерв\'ю про мобілізацію', ru: 'Интервью о мобилизации' } },
+            ],
         },
         {
             name: { en: 'Oleksandr Zinchenko', ua: 'Олександр Зінченко', ru: 'Александр Зинченко' },
@@ -398,6 +401,10 @@ async function main() {
             piterTest: 'True',
             mobilizationPosition: 'support',
             bordersPosition: 'neutral',
+            proofs: [
+                { url: 'https://www.youtube.com/watch?v=zinchenko1', description: { en: 'Statement about supporting Ukraine', ua: 'Заява про підтримку України', ru: 'Заявление о поддержке Украины' } },
+                { url: 'https://www.youtube.com/watch?v=zinchenko2', description: { en: 'Interview about mobilization', ua: 'Інтерв\'ю про мобілізацію', ru: 'Интервью о мобилизации' } },
+            ],
         },
         {
             name: { en: 'Andriy Shevchenko', ua: 'Андрій Шевченко', ru: 'Андрей Шевченко' },
@@ -414,6 +421,10 @@ async function main() {
             piterTest: 'True',
             mobilizationPosition: 'support',
             bordersPosition: 'neutral',
+            proofs: [
+                { url: 'https://www.youtube.com/watch?v=shevchenko1', description: { en: 'Interview about Ukraine and mobilization', ua: 'Інтерв\'ю про Україну та мобілізацію', ru: 'Интервью об Украине и мобилизации' } },
+                { url: 'https://www.youtube.com/watch?v=shevchenko2', description: { en: 'Statement supporting Ukrainian army', ua: 'Заява про підтримку української армії', ru: 'Заявление о поддержке украинской армии' } },
+            ],
         },
         {
             name: { en: 'Oleksandr Usyk (Boxer)', ua: 'Олександр Усик (Боксер)', ru: 'Александр Усик (Боксер)' },
@@ -430,6 +441,11 @@ async function main() {
             piterTest: 'True',
             mobilizationPosition: 'strong_support',
             bordersPosition: 'closed',
+            proofs: [
+                { url: 'https://www.youtube.com/watch?v=usyk1', description: { en: 'Interview about returning to Ukraine', ua: 'Інтерв\'ю про повернення в Україну', ru: 'Интервью о возвращении в Украину' } },
+                { url: 'https://www.youtube.com/watch?v=usyk2', description: { en: 'Statement about mobilization support', ua: 'Заява про підтримку мобілізації', ru: 'Заявление о поддержке мобилизации' } },
+                { url: 'https://www.youtube.com/watch?v=usyk3', description: { en: 'Message to Ukrainian soldiers', ua: 'Звернення до українських воїнів', ru: 'Обращение к украинским воинам' } },
+            ],
         },
         {
             name: { en: 'Olena Zelenska', ua: 'Олена Зеленська', ru: 'Елена Зеленская' },
@@ -446,6 +462,10 @@ async function main() {
             piterTest: 'True',
             mobilizationPosition: 'strong_support',
             bordersPosition: 'closed',
+            proofs: [
+                { url: 'https://www.youtube.com/watch?v=zelenska1', description: { en: 'Speech about supporting Ukrainian army', ua: 'Промова про підтримку української армії', ru: 'Речь о поддержке украинской армии' } },
+                { url: 'https://www.youtube.com/watch?v=zelenska2', description: { en: 'Interview about closed borders', ua: 'Інтерв\'ю про закриті кордони', ru: 'Интервью о закрытых границах' } },
+            ],
         },
         {
             name: { en: 'Yuriy Hudymenko', ua: 'Юрій Гудименко', ru: 'Юрий Гудименко' },
@@ -462,6 +482,9 @@ async function main() {
             piterTest: 'Unknown',
             mobilizationPosition: 'neutral',
             bordersPosition: 'open',
+            proofs: [
+                { url: 'https://www.youtube.com/watch?v=hudymenko1', description: { en: 'Neutral statement about mobilization', ua: 'Нейтральна заява про мобілізацію', ru: 'Нейтральное заявление о мобилизации' } },
+            ],
         },
         {
             name: { en: 'Oleksandr Feldman', ua: 'Олександр Фельдман', ru: 'Александр Фельдман' },
@@ -478,6 +501,10 @@ async function main() {
             piterTest: 'False',
             mobilizationPosition: 'against',
             bordersPosition: 'open',
+            proofs: [
+                { url: 'https://www.youtube.com/watch?v=feldman1', description: { en: 'Statement against mobilization', ua: 'Заява проти мобілізації', ru: 'Заявление против мобилизации' } },
+                { url: 'https://www.youtube.com/watch?v=feldman2', description: { en: 'Interview about open borders', ua: 'Інтерв\'ю про відкриті кордони', ru: 'Интервью об открытых границах' } },
+            ],
         },
         {
             name: { en: 'Ihor Kolomoisky', ua: 'Ігор Коломойський', ru: 'Игорь Коломойский' },
@@ -494,6 +521,10 @@ async function main() {
             piterTest: 'False',
             mobilizationPosition: 'strong_against',
             bordersPosition: 'open',
+            proofs: [
+                { url: 'https://www.youtube.com/watch?v=kolomoisky1', description: { en: 'Statement against mobilization', ua: 'Заява проти мобілізації', ru: 'Заявление против мобилизации' } },
+                { url: 'https://www.youtube.com/watch?v=kolomoisky2', description: { en: 'Interview about business and borders', ua: 'Інтерв\'ю про бізнес та кордони', ru: 'Интервью о бизнесе и границах' } },
+            ],
         },
         {
             name: { en: 'Viktor Medvedchuk', ua: 'Віктор Медведчук', ru: 'Виктор Медведчук' },
@@ -510,6 +541,10 @@ async function main() {
             piterTest: 'False',
             mobilizationPosition: 'strong_against',
             bordersPosition: 'open',
+            proofs: [
+                { url: 'https://www.youtube.com/watch?v=medvedchuk1', description: { en: 'Statement against mobilization', ua: 'Заява проти мобілізації', ru: 'Заявление против мобилизации' } },
+                { url: 'https://www.youtube.com/watch?v=medvedchuk2', description: { en: 'Interview about open borders policy', ua: 'Інтерв\'ю про політику відкритих кордонів', ru: 'Интервью о политике открытых границ' } },
+            ],
         },
     ];
 
@@ -580,6 +615,12 @@ async function main() {
                             url: platform.url,
                         };
                     }).filter(p => p !== null),
+                } : undefined,
+                proofs: blogger.proofs ? {
+                    create: blogger.proofs.map((proof) => ({
+                        url: proof.url,
+                        description: proof.description || null,
+                    })),
                 } : undefined,
                 statusHistory: {
                     create: {
